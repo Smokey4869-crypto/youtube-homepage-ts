@@ -1,0 +1,38 @@
+import React from "react";
+
+type VideoGridItemProps = {
+  id: string;
+  title: string;
+  channel: {
+    id: string;
+    name: string;
+    profileUrl: string;
+  };
+  views: number;
+  postedAt: Date;
+  thumbnailUrl: string;
+  videoUrl: string;
+};
+
+const VideoGridItem = ({
+  id,
+  title,
+  channel,
+  views,
+  postedAt,
+  thumbnailUrl,
+  videoUrl,
+}: VideoGridItemProps) => {
+  return (
+    <div className="flex flex-col gap-2">
+      <a href={`/watch?v=${id}`} className="relative aspect-video">
+        <img src={thumbnailUrl} className="block w-full h-full object-cover rounded-xl" />
+        <div className="absolute bottom-1 right-1 bg-secondary-dark text-secondary text-sm px- 5 rounded">
+            
+        </div>
+      </a>
+    </div>
+  );
+};
+
+export default VideoGridItem;
