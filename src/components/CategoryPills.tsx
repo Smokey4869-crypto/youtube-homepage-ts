@@ -4,15 +4,15 @@ import { useEffect, useRef, useState } from "react";
 
 type CategoryPillProps = {
   categories: string[];
-  selectedCategory: string;
-  onSelect: (category: string) => void;
+  selectedCategories: string[];
+  onSelect: (categories: string[]) => void;
 };
 
 const TRANSLATE_AMOUNT = 200;
 
 const CategoryPills = ({
   categories,
-  selectedCategory,
+  selectedCategories,
   onSelect,
 }: CategoryPillProps) => {
   const [translatePos, setTranslatePos] = useState(0);
@@ -22,17 +22,27 @@ const CategoryPills = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (containerRef.current == null) return
+    if (containerRef.current == null) return;
 
-    const observer = new ResizeObserver(entries => {
-      const container = entries[0]?.target
+    const observer = new ResizeObserver((entries) => {
+      const container = entries[0]?.target;
 
-      setIsLeftVisible(translatePos > 0)
-      setIsRightVisible(translatePos + container.clientWidth < container.scrollWidth)
-    })
+      setIsLeftVisible(translatePos > 0);
+      setIsRightVisible(
+        translatePos + container.clientWidth < container.scrollWidth
+      );
+    });
 
-    observer.observe(containerRef.current)
-  }, [categories, translatePos])
+    observer.observe(containerRef.current);
+  }, [categories, translatePos]);
+
+  const toggleCategory = (category: string) => {
+    if (selectedCategories.includes(category)) {
+      onSelect(selectedCategories.filter((c) => c !== category));
+    } else {
+      onSelect([...selectedCategories, category]);
+    }
+  };
 
   return (
     <div ref={containerRef} className="overflow-hidden relative">
@@ -43,9 +53,11 @@ const CategoryPills = ({
         {categories.map((item) => (
           <Button
             key={item}
-            onClick={() => onSelect(item)}
+            onClick={() => toggleCategory(item)}
             className="py-1 px-3 rounded-lg whitespace-nowrap"
-            variant={`${selectedCategory === item ? "dark" : "default"}`}
+            variant={`${
+              selectedCategories.includes(item) ? "dark" : "default"
+            }`}
           >
             <span>{item}</span>
           </Button>
